@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PhishGuard Warning</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8d7da;
+      color: #721c24;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #dc3545;
+    }
+    .warning-icon {
+      font-size: 72px;
+      margin-bottom: 20px;
+    }
+    .url-display {
+      word-break: break-all;
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .buttons {
+      margin-top: 30px;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    .warning {
+      background-color: #ffc107;
+      color: #212529;
+    }
+    .details {
+      margin: 20px 0;
+      text-align: left;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="warning-icon">⚠️</div>
+    <h1>Phishing Warning</h1>
+    <h2>PhishGuard has detected a potential phishing attempt</h2>
+    
+    <div class="url-display">
+      <span id="suspiciousUrl"></span>
+    </div>
+    
+    <p>This website has characteristics commonly associated with phishing attempts and may be trying to steal your personal information.</p>
+    
+    <div class="details">
+      <h3>Detected Issues:</h3>
+      <p id="reasons"></p>
+      <p id="riskScore"></p>
+    </div>
+    
+    <div class="buttons">
+      <a href="#" id="goBack" class="button danger">Go Back (Recommended)</a>
+      <a href="#" id="proceed" class="button warning">Proceed Anyway (Risky)</a>
+    </div>
+    
+    <p style="margin-top: 20px; font-size: 14px;">PhishGuard is protecting you from potential identity theft and fraud.</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const suspiciousUrl = urlParams.get('url');
+      const reason = urlParams.get('reason');
+      
+      // Display information
+      document.getElementById('suspiciousUrl').textContent = suspiciousUrl || '[Unknown URL]';
+      document.getElementById('reasons').textContent = reason || 'Multiple suspicious patterns detected';
+      
+      // Set up button actions
+      document.getElementById('goBack').addEventListener('click', function(e) {
+        e.preventDefault();
+        history.back();
+      });
+      
+      document.getElementById('proceed').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Log the user's decision to proceed
+        chrome.runtime.sendMessage({
+          action: "logRiskyProceed", 
+          url: suspiciousUrl
+        });
+        
+        // Proceed to the site anyway
+        window.location.href = suspiciousUrl;
+      });
+      
+      // Get risk score for this URL
+      chrome.runtime.sendMessage(
+        {action: "checkUrl", url: suspiciousUrl},
+        function(result) {
+          document.getElementById('riskScore').textContent = 
+            `Risk Score: ${Math.round(result.score * 100)}%`;
+        }
+      );
+    });
+  </script>
+</body>
+</html>

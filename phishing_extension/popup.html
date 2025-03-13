@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PhishGuard</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 320px;
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .header img {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      color: #2c3e50;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    .safe {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .unsafe {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .checking {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .stats {
+      font-size: 14px;
+      color: #6c757d;
+      margin-top: 15px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #0069d9;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="images/icon48.jpg" alt="PhishGuard">
+    <h1>PhishGuard</h1>
+  </div>
+  
+  <div id="statusContainer" class="status checking">
+    Checking current page...
+  </div>
+  
+  <div id="details"></div>
+  
+  <button id="checkNow">Check Current Page</button>
+  
+  <div class="stats">
+    <p>URLs checked: <span id="urlsChecked">0</span></p>
+    <p>Phishing detected: <span id="phishingDetected">0</span></p>
+    <p>Last detection: <span id="lastDetection">None</span></p>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
